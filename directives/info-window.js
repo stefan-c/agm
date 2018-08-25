@@ -27,7 +27,7 @@ var infoWindowId = 0;
  * })
  * ```
  */
-var AgmInfoWindow = (function () {
+var AgmInfoWindow = /** @class */ (function () {
     function AgmInfoWindow(_infoWindowManager, _el) {
         this._infoWindowManager = _infoWindowManager;
         this._el = _el;
@@ -99,28 +99,28 @@ var AgmInfoWindow = (function () {
     AgmInfoWindow.prototype.toString = function () { return 'AgmInfoWindow-' + this._id.toString(); };
     /** @internal */
     AgmInfoWindow.prototype.ngOnDestroy = function () { this._infoWindowManager.deleteInfoWindow(this); };
+    AgmInfoWindow._infoWindowOptionsInputs = ['disableAutoPan', 'maxWidth'];
+    AgmInfoWindow.decorators = [
+        { type: Component, args: [{
+                    selector: 'agm-info-window',
+                    template: "<div class='agm-info-window-content'>\n      <ng-content></ng-content>\n    </div>\n  "
+                },] },
+    ];
+    /** @nocollapse */
+    AgmInfoWindow.ctorParameters = function () { return [
+        { type: InfoWindowManager },
+        { type: ElementRef }
+    ]; };
+    AgmInfoWindow.propDecorators = {
+        latitude: [{ type: Input }],
+        longitude: [{ type: Input }],
+        disableAutoPan: [{ type: Input }],
+        zIndex: [{ type: Input }],
+        maxWidth: [{ type: Input }],
+        isOpen: [{ type: Input }],
+        infoWindowClose: [{ type: Output }]
+    };
     return AgmInfoWindow;
 }());
 export { AgmInfoWindow };
-AgmInfoWindow._infoWindowOptionsInputs = ['disableAutoPan', 'maxWidth'];
-AgmInfoWindow.decorators = [
-    { type: Component, args: [{
-                selector: 'agm-info-window',
-                template: "<div class='agm-info-window-content'>\n      <ng-content></ng-content>\n    </div>\n  "
-            },] },
-];
-/** @nocollapse */
-AgmInfoWindow.ctorParameters = function () { return [
-    { type: InfoWindowManager, },
-    { type: ElementRef, },
-]; };
-AgmInfoWindow.propDecorators = {
-    'latitude': [{ type: Input },],
-    'longitude': [{ type: Input },],
-    'disableAutoPan': [{ type: Input },],
-    'zIndex': [{ type: Input },],
-    'maxWidth': [{ type: Input },],
-    'isOpen': [{ type: Input },],
-    'infoWindowClose': [{ type: Output },],
-};
 //# sourceMappingURL=info-window.js.map

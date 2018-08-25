@@ -173,8 +173,8 @@ export declare class AgmPolygon implements OnDestroy, OnChanges, AfterContentIni
     private _updatePolygonOptions(changes);
     /** @internal */
     id(): string;
+    getPath(): Promise<LatLngLiteral[]>;
+    getPaths(): Promise<LatLngLiteral[][]>;
     /** @internal */
     ngOnDestroy(): void;
-    getPath(): Promise<Array<LatLng>>;
-    getPaths(): Promise<Array<Array<LatLng>>>;
 }

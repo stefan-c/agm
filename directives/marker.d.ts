@@ -2,6 +2,7 @@ import { EventEmitter, OnChanges, OnDestroy, SimpleChange, AfterContentInit, Que
 import { MouseEvent } from '../map-types';
 import { MarkerManager } from '../services/managers/marker-manager';
 import { AgmInfoWindow } from './info-window';
+import { MarkerLabel } from '../map-types';
 /**
  * AgmMarker renders a map marker inside a {@link AgmMap}.
  *
@@ -42,7 +43,7 @@ export declare class AgmMarker implements OnDestroy, OnChanges, AfterContentInit
     /**
      * The label (a single uppercase character) for the marker.
      */
-    label: string;
+    label: string | MarkerLabel;
     /**
      * If true, the marker can be dragged. Default value is false.
      */
@@ -71,9 +72,22 @@ export declare class AgmMarker implements OnDestroy, OnChanges, AfterContentInit
      */
     zIndex: number;
     /**
+     * If true, the marker can be clicked. Default value is true.
+     */
+    clickable: boolean;
+    /**
+     * Which animation to play when marker is added to a map.
+     * This can be 'BOUNCE' or 'DROP'
+     */
+    animation: 'BOUNCE' | 'DROP' | null;
+    /**
      * This event emitter gets emitted when the user clicks on the marker.
      */
     markerClick: EventEmitter<void>;
+    /**
+     * This event is fired when the user rightclicks on the marker.
+     */
+    markerRightClick: EventEmitter<void>;
     /**
      * This event is fired when the user stops dragging the marker.
      */

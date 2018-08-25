@@ -1,5 +1,5 @@
 import { AfterContentInit, EventEmitter, OnChanges, OnDestroy, QueryList, SimpleChanges } from '@angular/core';
-import { PolyMouseEvent, LatLng } from '../services/google-maps-types';
+import { PolyMouseEvent } from '../services/google-maps-types';
 import { PolylineManager } from '../services/managers/polyline-manager';
 import { AgmPolylinePoint } from './polyline-point';
 /**
@@ -128,7 +128,6 @@ export declare class AgmPolyline implements OnDestroy, OnChanges, AfterContentIn
     /** @internal */
     ngAfterContentInit(): void;
     ngOnChanges(changes: SimpleChanges): any;
-    getPath(): Promise<Array<LatLng>>;
     private _init();
     private _addEventListeners();
     /** @internal */

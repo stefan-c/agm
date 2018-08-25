@@ -25,7 +25,7 @@ var markerId = 0;
  * })
  * ```
  */
-var AgmMarker = (function () {
+var AgmMarker = /** @class */ (function () {
     function AgmMarker(_markerManager) {
         this._markerManager = _markerManager;
         /**
@@ -53,9 +53,18 @@ var AgmMarker = (function () {
          */
         this.zIndex = 1;
         /**
+         * If true, the marker can be clicked. Default value is true.
+         */
+        // tslint:disable-next-line:no-input-rename
+        this.clickable = true;
+        /**
          * This event emitter gets emitted when the user clicks on the marker.
          */
         this.markerClick = new EventEmitter();
+        /**
+         * This event is fired when the user rightclicks on the marker.
+         */
+        this.markerRightClick = new EventEmitter();
         /**
          * This event is fired when the user stops dragging the marker.
          */
@@ -93,6 +102,12 @@ var AgmMarker = (function () {
     };
     /** @internal */
     AgmMarker.prototype.ngOnChanges = function (changes) {
+        if (typeof this.latitude === 'string') {
+            this.latitude = Number(this.latitude);
+        }
+        if (typeof this.longitude === 'string') {
+            this.longitude = Number(this.longitude);
+        }
         if (typeof this.latitude !== 'number' || typeof this.longitude !== 'number') {
             return;
         }
@@ -126,6 +141,12 @@ var AgmMarker = (function () {
         if (changes['zIndex']) {
             this._markerManager.updateZIndex(this);
         }
+        if (changes['clickable']) {
+            this._markerManager.updateClickable(this);
+        }
+        if (changes['animation']) {
+            this._markerManager.updateAnimation(this);
+        }
     };
     AgmMarker.prototype._addEventListeners = function () {
         var _this = this;
@@ -136,6 +157,10 @@ var AgmMarker = (function () {
             _this.markerClick.emit(null);
         });
         this._observableSubscriptions.push(cs);
+        var rc = this._markerManager.createEventObservable('rightclick', this).subscribe(function () {
+            _this.markerRightClick.emit(null);
+        });
+        this._observableSubscriptions.push(rc);
         var ds = this._markerManager.createEventObservable('dragend', this)
             .subscribe(function (e) {
             _this.dragEnd.emit({ coords: { lat: e.latLng.lat(), lng: e.latLng.lng() } });
@@ -162,33 +187,40 @@ var AgmMarker = (function () {
         // unsubscribe all registered observable subscriptions
         this._observableSubscriptions.forEach(function (s) { return s.unsubscribe(); });
     };
+    AgmMarker.decorators = [
+        { type: Directive, args: [{
+                    selector: 'agm-marker',
+                    inputs: [
+                        'latitude', 'longitude', 'title', 'label', 'draggable: markerDraggable', 'iconUrl',
+                        'openInfoWindow', 'opacity', 'visible', 'zIndex', 'animation'
+                    ],
+                    outputs: ['markerClick', 'dragEnd', 'mouseOver', 'mouseOut']
+                },] },
+    ];
+    /** @nocollapse */
+    AgmMarker.ctorParameters = function () { return [
+        { type: MarkerManager }
+    ]; };
+    AgmMarker.propDecorators = {
+        latitude: [{ type: Input }],
+        longitude: [{ type: Input }],
+        title: [{ type: Input }],
+        label: [{ type: Input }],
+        draggable: [{ type: Input, args: ['markerDraggable',] }],
+        iconUrl: [{ type: Input }],
+        visible: [{ type: Input }],
+        openInfoWindow: [{ type: Input }],
+        opacity: [{ type: Input }],
+        zIndex: [{ type: Input }],
+        clickable: [{ type: Input, args: ['markerClickable',] }],
+        markerClick: [{ type: Output }],
+        markerRightClick: [{ type: Output }],
+        dragEnd: [{ type: Output }],
+        mouseOver: [{ type: Output }],
+        mouseOut: [{ type: Output }],
+        infoWindow: [{ type: ContentChildren, args: [AgmInfoWindow,] }]
+    };
     return AgmMarker;
 }());
 export { AgmMarker };
-AgmMarker.decorators = [
-    { type: Directive, args: [{
-                selector: 'agm-marker'
-            },] },
-];
-/** @nocollapse */
-AgmMarker.ctorParameters = function () { return [
-    { type: MarkerManager, },
-]; };
-AgmMarker.propDecorators = {
-    'latitude': [{ type: Input },],
-    'longitude': [{ type: Input },],
-    'title': [{ type: Input },],
-    'label': [{ type: Input },],
-    'draggable': [{ type: Input, args: ['markerDraggable',] },],
-    'iconUrl': [{ type: Input },],
-    'visible': [{ type: Input },],
-    'openInfoWindow': [{ type: Input },],
-    'opacity': [{ type: Input },],
-    'zIndex': [{ type: Input },],
-    'markerClick': [{ type: Output },],
-    'dragEnd': [{ type: Output },],
-    'mouseOver': [{ type: Output },],
-    'mouseOut': [{ type: Output },],
-    'infoWindow': [{ type: ContentChildren, args: [AgmInfoWindow,] },],
-};
 //# sourceMappingURL=marker.js.map

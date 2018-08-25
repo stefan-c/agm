@@ -1,7 +1,7 @@
 import { Directive, EventEmitter, Input, Output } from '@angular/core';
 import { KmlLayerManager } from './../services/managers/kml-layer-manager';
 var layerId = 0;
-var AgmKmlLayer = (function () {
+var AgmKmlLayer = /** @class */ (function () {
     function AgmKmlLayer(_manager) {
         this._manager = _manager;
         this._addedToManager = false;
@@ -96,28 +96,28 @@ var AgmKmlLayer = (function () {
         // unsubscribe all registered observable subscriptions
         this._subscriptions.forEach(function (s) { return s.unsubscribe(); });
     };
+    AgmKmlLayer._kmlLayerOptions = ['clickable', 'preserveViewport', 'screenOverlays', 'suppressInfoWindows', 'url', 'zIndex'];
+    AgmKmlLayer.decorators = [
+        { type: Directive, args: [{
+                    selector: 'agm-kml-layer'
+                },] },
+    ];
+    /** @nocollapse */
+    AgmKmlLayer.ctorParameters = function () { return [
+        { type: KmlLayerManager }
+    ]; };
+    AgmKmlLayer.propDecorators = {
+        clickable: [{ type: Input }],
+        preserveViewport: [{ type: Input }],
+        screenOverlays: [{ type: Input }],
+        suppressInfoWindows: [{ type: Input }],
+        url: [{ type: Input }],
+        zIndex: [{ type: Input }],
+        layerClick: [{ type: Output }],
+        defaultViewportChange: [{ type: Output }],
+        statusChange: [{ type: Output }]
+    };
     return AgmKmlLayer;
 }());
 export { AgmKmlLayer };
-AgmKmlLayer._kmlLayerOptions = ['clickable', 'preserveViewport', 'screenOverlays', 'suppressInfoWindows', 'url', 'zIndex'];
-AgmKmlLayer.decorators = [
-    { type: Directive, args: [{
-                selector: 'agm-kml-layer'
-            },] },
-];
-/** @nocollapse */
-AgmKmlLayer.ctorParameters = function () { return [
-    { type: KmlLayerManager, },
-]; };
-AgmKmlLayer.propDecorators = {
-    'clickable': [{ type: Input },],
-    'preserveViewport': [{ type: Input },],
-    'screenOverlays': [{ type: Input },],
-    'suppressInfoWindows': [{ type: Input },],
-    'url': [{ type: Input },],
-    'zIndex': [{ type: Input },],
-    'layerClick': [{ type: Output },],
-    'defaultViewportChange': [{ type: Output },],
-    'statusChange': [{ type: Output },],
-};
 //# sourceMappingURL=kml-layer.js.map

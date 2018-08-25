@@ -49,7 +49,7 @@ import { PolygonManager } from '../services/managers/polygon-manager';
  * }
  * ```
  */
-var AgmPolygon = (function () {
+var AgmPolygon = /** @class */ (function () {
     function AgmPolygon(_polygonManager) {
         this._polygonManager = _polygonManager;
         /**
@@ -156,7 +156,7 @@ var AgmPolygon = (function () {
         var _this = this;
         var handlers = [
             { name: 'click', handler: function (ev) { return _this.polyClick.emit(ev); } },
-            { name: 'dbclick', handler: function (ev) { return _this.polyDblClick.emit(ev); } },
+            { name: 'dblclick', handler: function (ev) { return _this.polyDblClick.emit(ev); } },
             { name: 'drag', handler: function (ev) { return _this.polyDrag.emit(ev); } },
             { name: 'dragend', handler: function (ev) { return _this.polyDragEnd.emit(ev); } },
             { name: 'dragstart', handler: function (ev) { return _this.polyDragStart.emit(ev); } },
@@ -182,58 +182,58 @@ var AgmPolygon = (function () {
     };
     /** @internal */
     AgmPolygon.prototype.id = function () { return this._id; };
-    /** @internal */
-    AgmPolygon.prototype.ngOnDestroy = function () {
-        this._polygonManager.deletePolygon(this);
-        // unsubscribe all registered observable subscriptions
-        this._subscriptions.forEach(function (s) { return s.unsubscribe(); });
-    };
     AgmPolygon.prototype.getPath = function () {
         return this._polygonManager.getPath(this);
     };
     AgmPolygon.prototype.getPaths = function () {
         return this._polygonManager.getPaths(this);
     };
+    /** @internal */
+    AgmPolygon.prototype.ngOnDestroy = function () {
+        this._polygonManager.deletePolygon(this);
+        // unsubscribe all registered observable subscriptions
+        this._subscriptions.forEach(function (s) { return s.unsubscribe(); });
+    };
+    AgmPolygon._polygonOptionsAttributes = [
+        'clickable', 'draggable', 'editable', 'fillColor', 'fillOpacity', 'geodesic', 'icon', 'map',
+        'paths', 'strokeColor', 'strokeOpacity', 'strokeWeight', 'visible', 'zIndex', 'draggable',
+        'editable', 'visible'
+    ];
+    AgmPolygon.decorators = [
+        { type: Directive, args: [{
+                    selector: 'agm-polygon'
+                },] },
+    ];
+    /** @nocollapse */
+    AgmPolygon.ctorParameters = function () { return [
+        { type: PolygonManager }
+    ]; };
+    AgmPolygon.propDecorators = {
+        clickable: [{ type: Input }],
+        draggable: [{ type: Input, args: ['polyDraggable',] }],
+        editable: [{ type: Input }],
+        fillColor: [{ type: Input }],
+        fillOpacity: [{ type: Input }],
+        geodesic: [{ type: Input }],
+        paths: [{ type: Input }],
+        strokeColor: [{ type: Input }],
+        strokeOpacity: [{ type: Input }],
+        strokeWeight: [{ type: Input }],
+        visible: [{ type: Input }],
+        zIndex: [{ type: Input }],
+        polyClick: [{ type: Output }],
+        polyDblClick: [{ type: Output }],
+        polyDrag: [{ type: Output }],
+        polyDragEnd: [{ type: Output }],
+        polyDragStart: [{ type: Output }],
+        polyMouseDown: [{ type: Output }],
+        polyMouseMove: [{ type: Output }],
+        polyMouseOut: [{ type: Output }],
+        polyMouseOver: [{ type: Output }],
+        polyMouseUp: [{ type: Output }],
+        polyRightClick: [{ type: Output }]
+    };
     return AgmPolygon;
 }());
 export { AgmPolygon };
-AgmPolygon._polygonOptionsAttributes = [
-    'clickable', 'draggable', 'editable', 'fillColor', 'fillOpacity', 'geodesic', 'icon', 'map',
-    'paths', 'strokeColor', 'strokeOpacity', 'strokeWeight', 'visible', 'zIndex', 'draggable',
-    'editable', 'visible'
-];
-AgmPolygon.decorators = [
-    { type: Directive, args: [{
-                selector: 'agm-polygon'
-            },] },
-];
-/** @nocollapse */
-AgmPolygon.ctorParameters = function () { return [
-    { type: PolygonManager, },
-]; };
-AgmPolygon.propDecorators = {
-    'clickable': [{ type: Input },],
-    'draggable': [{ type: Input, args: ['polyDraggable',] },],
-    'editable': [{ type: Input },],
-    'fillColor': [{ type: Input },],
-    'fillOpacity': [{ type: Input },],
-    'geodesic': [{ type: Input },],
-    'paths': [{ type: Input },],
-    'strokeColor': [{ type: Input },],
-    'strokeOpacity': [{ type: Input },],
-    'strokeWeight': [{ type: Input },],
-    'visible': [{ type: Input },],
-    'zIndex': [{ type: Input },],
-    'polyClick': [{ type: Output },],
-    'polyDblClick': [{ type: Output },],
-    'polyDrag': [{ type: Output },],
-    'polyDragEnd': [{ type: Output },],
-    'polyDragStart': [{ type: Output },],
-    'polyMouseDown': [{ type: Output },],
-    'polyMouseMove': [{ type: Output },],
-    'polyMouseOut': [{ type: Output },],
-    'polyMouseOver': [{ type: Output },],
-    'polyMouseUp': [{ type: Output },],
-    'polyRightClick': [{ type: Output },],
-};
 //# sourceMappingURL=polygon.js.map

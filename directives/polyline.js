@@ -1,4 +1,4 @@
-import { ContentChildren, Directive, EventEmitter, Input, Output } from '@angular/core';
+import { ContentChildren, Directive, EventEmitter, QueryList, Input, Output } from '@angular/core';
 import { PolylineManager } from '../services/managers/polyline-manager';
 import { AgmPolylinePoint } from './polyline-point';
 var polylineId = 0;
@@ -29,7 +29,7 @@ var polylineId = 0;
  * })
  * ```
  */
-var AgmPolyline = (function () {
+var AgmPolyline = /** @class */ (function () {
     function AgmPolyline(_polylineManager) {
         this._polylineManager = _polylineManager;
         /**
@@ -132,9 +132,6 @@ var AgmPolyline = (function () {
         optionKeys.forEach(function (k) { return options[k] = changes[k].currentValue; });
         this._polylineManager.setPolylineOptions(this, options);
     };
-    AgmPolyline.prototype.getPath = function () {
-        return this._polylineManager.getPath(this);
-    };
     AgmPolyline.prototype._init = function () {
         this._polylineManager.addPolyline(this);
         this._polylineAddedToManager = true;
@@ -144,7 +141,7 @@ var AgmPolyline = (function () {
         var _this = this;
         var handlers = [
             { name: 'click', handler: function (ev) { return _this.lineClick.emit(ev); } },
-            { name: 'dbclick', handler: function (ev) { return _this.lineDblClick.emit(ev); } },
+            { name: 'dblclick', handler: function (ev) { return _this.lineDblClick.emit(ev); } },
             { name: 'drag', handler: function (ev) { return _this.lineDrag.emit(ev); } },
             { name: 'dragend', handler: function (ev) { return _this.lineDragEnd.emit(ev); } },
             { name: 'dragstart', handler: function (ev) { return _this.lineDragStart.emit(ev); } },
@@ -175,43 +172,43 @@ var AgmPolyline = (function () {
         // unsubscribe all registered observable subscriptions
         this._subscriptions.forEach(function (s) { return s.unsubscribe(); });
     };
+    AgmPolyline._polylineOptionsAttributes = [
+        'draggable', 'editable', 'visible', 'geodesic', 'strokeColor', 'strokeOpacity', 'strokeWeight',
+        'zIndex'
+    ];
+    AgmPolyline.decorators = [
+        { type: Directive, args: [{
+                    selector: 'agm-polyline'
+                },] },
+    ];
+    /** @nocollapse */
+    AgmPolyline.ctorParameters = function () { return [
+        { type: PolylineManager }
+    ]; };
+    AgmPolyline.propDecorators = {
+        clickable: [{ type: Input }],
+        draggable: [{ type: Input, args: ['polylineDraggable',] }],
+        editable: [{ type: Input }],
+        geodesic: [{ type: Input }],
+        strokeColor: [{ type: Input }],
+        strokeOpacity: [{ type: Input }],
+        strokeWeight: [{ type: Input }],
+        visible: [{ type: Input }],
+        zIndex: [{ type: Input }],
+        lineClick: [{ type: Output }],
+        lineDblClick: [{ type: Output }],
+        lineDrag: [{ type: Output }],
+        lineDragEnd: [{ type: Output }],
+        lineDragStart: [{ type: Output }],
+        lineMouseDown: [{ type: Output }],
+        lineMouseMove: [{ type: Output }],
+        lineMouseOut: [{ type: Output }],
+        lineMouseOver: [{ type: Output }],
+        lineMouseUp: [{ type: Output }],
+        lineRightClick: [{ type: Output }],
+        points: [{ type: ContentChildren, args: [AgmPolylinePoint,] }]
+    };
     return AgmPolyline;
 }());
 export { AgmPolyline };
-AgmPolyline._polylineOptionsAttributes = [
-    'draggable', 'editable', 'visible', 'geodesic', 'strokeColor', 'strokeOpacity', 'strokeWeight',
-    'zIndex'
-];
-AgmPolyline.decorators = [
-    { type: Directive, args: [{
-                selector: 'agm-polyline'
-            },] },
-];
-/** @nocollapse */
-AgmPolyline.ctorParameters = function () { return [
-    { type: PolylineManager, },
-]; };
-AgmPolyline.propDecorators = {
-    'clickable': [{ type: Input },],
-    'draggable': [{ type: Input, args: ['polylineDraggable',] },],
-    'editable': [{ type: Input },],
-    'geodesic': [{ type: Input },],
-    'strokeColor': [{ type: Input },],
-    'strokeOpacity': [{ type: Input },],
-    'strokeWeight': [{ type: Input },],
-    'visible': [{ type: Input },],
-    'zIndex': [{ type: Input },],
-    'lineClick': [{ type: Output },],
-    'lineDblClick': [{ type: Output },],
-    'lineDrag': [{ type: Output },],
-    'lineDragEnd': [{ type: Output },],
-    'lineDragStart': [{ type: Output },],
-    'lineMouseDown': [{ type: Output },],
-    'lineMouseMove': [{ type: Output },],
-    'lineMouseOut': [{ type: Output },],
-    'lineMouseOver': [{ type: Output },],
-    'lineMouseUp': [{ type: Output },],
-    'lineRightClick': [{ type: Output },],
-    'points': [{ type: ContentChildren, args: [AgmPolylinePoint,] },],
-};
 //# sourceMappingURL=polyline.js.map

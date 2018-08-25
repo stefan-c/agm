@@ -1,8 +1,8 @@
 import { NgZone } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { AgmPolygon } from '../../directives/polygon';
 import { GoogleMapsAPIWrapper } from '../google-maps-api-wrapper';
-import { LatLng } from '../google-maps-types';
+import { LatLngLiteral } from '../google-maps-types';
 export declare class PolygonManager {
     private _mapsWrapper;
     private _zone;
@@ -14,7 +14,8 @@ export declare class PolygonManager {
         [propName: string]: any;
     }): Promise<void>;
     deletePolygon(paths: AgmPolygon): Promise<void>;
-    getPath(polygon: AgmPolygon): Promise<Array<LatLng>>;
-    getPaths(polygon: AgmPolygon): Promise<Array<Array<LatLng>>>;
+    getPath(polygon: AgmPolygon): Promise<LatLngLiteral[]>;
+    getPaths(polygon: AgmPolygon): Promise<LatLngLiteral[][]>;
     createEventObservable<T>(eventName: string, path: AgmPolygon): Observable<T>;
+    private _getPathFromMvcArray(mvcArray);
 }

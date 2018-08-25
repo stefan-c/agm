@@ -1,6 +1,7 @@
 import { Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
 import { GoogleMapsAPIWrapper } from '../services/google-maps-api-wrapper';
 import { CircleManager } from '../services/managers/circle-manager';
+import { RectangleManager } from '../services/managers/rectangle-manager';
 import { InfoWindowManager } from '../services/managers/info-window-manager';
 import { MarkerManager } from '../services/managers/marker-manager';
 import { PolygonManager } from '../services/managers/polygon-manager';
@@ -30,7 +31,7 @@ import { DataLayerManager } from './../services/managers/data-layer-manager';
  * })
  * ```
  */
-var AgmMap = (function () {
+var AgmMap = /** @class */ (function () {
     function AgmMap(_elem, _mapsWrapper) {
         this._elem = _elem;
         this._mapsWrapper = _mapsWrapper;
@@ -157,6 +158,10 @@ var AgmMap = (function () {
          */
         this.boundsChange = new EventEmitter();
         /**
+         * This event is fired when the mapTypeId property changes.
+         */
+        this.mapTypeIdChange = new EventEmitter();
+        /**
          * This event is fired when the map becomes idle after panning or zooming.
          */
         this.idle = new EventEmitter();
@@ -217,12 +222,15 @@ var AgmMap = (function () {
         this._handleMapZoomChange();
         this._handleMapMouseEvents();
         this._handleBoundsChange();
+        this._handleMapTypeIdChange();
         this._handleIdleEvent();
     };
     /** @internal */
     AgmMap.prototype.ngOnDestroy = function () {
         // unsubscribe all registered observable subscriptions
         this._observableSubscriptions.forEach(function (s) { return s.unsubscribe(); });
+        // remove all listeners from the map instance
+        this._mapsWrapper.clearInstanceListeners();
     };
     /* @internal */
     AgmMap.prototype.ngOnChanges = function (changes) {
@@ -310,6 +318,13 @@ var AgmMap = (function () {
         });
         this._observableSubscriptions.push(s);
     };
+    AgmMap.prototype._handleMapTypeIdChange = function () {
+        var _this = this;
+        var s = this._mapsWrapper.subscribeToMapEvent('maptypeid_changed').subscribe(function () {
+            _this._mapsWrapper.getMapTypeId().then(function (mapTypeId) { _this.mapTypeIdChange.emit(mapTypeId); });
+        });
+        this._observableSubscriptions.push(s);
+    };
     AgmMap.prototype._handleMapZoomChange = function () {
         var _this = this;
         var s = this._mapsWrapper.subscribeToMapEvent('zoom_changed').subscribe(function () {
@@ -340,81 +355,82 @@ var AgmMap = (function () {
             _this._observableSubscriptions.push(s);
         });
     };
+    /**
+     * Map option attributes that can change over time
+     */
+    AgmMap._mapOptionsAttributes = [
+        'disableDoubleClickZoom', 'scrollwheel', 'draggable', 'draggableCursor', 'draggingCursor',
+        'keyboardShortcuts', 'zoomControl', 'zoomControlOptions', 'styles', 'streetViewControl',
+        'streetViewControlOptions', 'zoom', 'mapTypeControl', 'mapTypeControlOptions', 'minZoom',
+        'maxZoom', 'panControl', 'panControlOptions', 'rotateControl', 'rotateControlOptions',
+        'fullscreenControl', 'fullscreenControlOptions', 'scaleControl', 'scaleControlOptions',
+        'mapTypeId', 'clickableIcons', 'gestureHandling'
+    ];
+    AgmMap.decorators = [
+        { type: Component, args: [{
+                    selector: 'agm-map',
+                    providers: [
+                        GoogleMapsAPIWrapper, MarkerManager, InfoWindowManager, CircleManager, RectangleManager,
+                        PolylineManager, PolygonManager, KmlLayerManager, DataLayerManager
+                    ],
+                    host: {
+                        // todo: deprecated - we will remove it with the next version
+                        '[class.sebm-google-map-container]': 'true'
+                    },
+                    styles: ["\n    .agm-map-container-inner {\n      width: inherit;\n      height: inherit;\n    }\n    .agm-map-content {\n      display:none;\n    }\n  "],
+                    template: "\n    <div class='agm-map-container-inner sebm-google-map-container-inner'></div>\n    <div class='agm-map-content'>\n      <ng-content></ng-content>\n    </div>\n  "
+                },] },
+    ];
+    /** @nocollapse */
+    AgmMap.ctorParameters = function () { return [
+        { type: ElementRef },
+        { type: GoogleMapsAPIWrapper }
+    ]; };
+    AgmMap.propDecorators = {
+        longitude: [{ type: Input }],
+        latitude: [{ type: Input }],
+        zoom: [{ type: Input }],
+        minZoom: [{ type: Input }],
+        maxZoom: [{ type: Input }],
+        draggable: [{ type: Input, args: ['mapDraggable',] }],
+        disableDoubleClickZoom: [{ type: Input }],
+        disableDefaultUI: [{ type: Input }],
+        scrollwheel: [{ type: Input }],
+        backgroundColor: [{ type: Input }],
+        draggableCursor: [{ type: Input }],
+        draggingCursor: [{ type: Input }],
+        keyboardShortcuts: [{ type: Input }],
+        zoomControl: [{ type: Input }],
+        zoomControlOptions: [{ type: Input }],
+        styles: [{ type: Input }],
+        usePanning: [{ type: Input }],
+        streetViewControl: [{ type: Input }],
+        streetViewControlOptions: [{ type: Input }],
+        fitBounds: [{ type: Input }],
+        scaleControl: [{ type: Input }],
+        scaleControlOptions: [{ type: Input }],
+        mapTypeControl: [{ type: Input }],
+        mapTypeControlOptions: [{ type: Input }],
+        panControl: [{ type: Input }],
+        panControlOptions: [{ type: Input }],
+        rotateControl: [{ type: Input }],
+        rotateControlOptions: [{ type: Input }],
+        fullscreenControl: [{ type: Input }],
+        fullscreenControlOptions: [{ type: Input }],
+        mapTypeId: [{ type: Input }],
+        clickableIcons: [{ type: Input }],
+        gestureHandling: [{ type: Input }],
+        mapClick: [{ type: Output }],
+        mapRightClick: [{ type: Output }],
+        mapDblClick: [{ type: Output }],
+        centerChange: [{ type: Output }],
+        boundsChange: [{ type: Output }],
+        mapTypeIdChange: [{ type: Output }],
+        idle: [{ type: Output }],
+        zoomChange: [{ type: Output }],
+        mapReady: [{ type: Output }]
+    };
     return AgmMap;
 }());
 export { AgmMap };
-/**
- * Map option attributes that can change over time
- */
-AgmMap._mapOptionsAttributes = [
-    'disableDoubleClickZoom', 'scrollwheel', 'draggable', 'draggableCursor', 'draggingCursor',
-    'keyboardShortcuts', 'zoomControl', 'zoomControlOptions', 'styles', 'streetViewControl',
-    'streetViewControlOptions', 'zoom', 'mapTypeControl', 'mapTypeControlOptions', 'minZoom',
-    'maxZoom', 'panControl', 'panControlOptions', 'rotateControl', 'rotateControlOptions',
-    'fullscreenControl', 'fullscreenControlOptions', 'scaleControl', 'scaleControlOptions',
-    'mapTypeId', 'clickableIcons', 'gestureHandling'
-];
-AgmMap.decorators = [
-    { type: Component, args: [{
-                selector: 'agm-map',
-                providers: [
-                    GoogleMapsAPIWrapper, MarkerManager, InfoWindowManager, CircleManager, PolylineManager,
-                    PolygonManager, KmlLayerManager, DataLayerManager
-                ],
-                host: {
-                    // todo: deprecated - we will remove it with the next version
-                    '[class.sebm-google-map-container]': 'true'
-                },
-                styles: ["\n    .agm-map-container-inner {\n      width: inherit;\n      height: inherit;\n    }\n    .agm-map-content {\n      display:none;\n    }\n  "],
-                template: "\n    <div class='agm-map-container-inner sebm-google-map-container-inner'></div>\n    <div class='agm-map-content'>\n      <ng-content></ng-content>\n    </div>\n  "
-            },] },
-];
-/** @nocollapse */
-AgmMap.ctorParameters = function () { return [
-    { type: ElementRef, },
-    { type: GoogleMapsAPIWrapper, },
-]; };
-AgmMap.propDecorators = {
-    'longitude': [{ type: Input },],
-    'latitude': [{ type: Input },],
-    'zoom': [{ type: Input },],
-    'minZoom': [{ type: Input },],
-    'maxZoom': [{ type: Input },],
-    'draggable': [{ type: Input, args: ['mapDraggable',] },],
-    'disableDoubleClickZoom': [{ type: Input },],
-    'disableDefaultUI': [{ type: Input },],
-    'scrollwheel': [{ type: Input },],
-    'backgroundColor': [{ type: Input },],
-    'draggableCursor': [{ type: Input },],
-    'draggingCursor': [{ type: Input },],
-    'keyboardShortcuts': [{ type: Input },],
-    'zoomControl': [{ type: Input },],
-    'zoomControlOptions': [{ type: Input },],
-    'styles': [{ type: Input },],
-    'usePanning': [{ type: Input },],
-    'streetViewControl': [{ type: Input },],
-    'streetViewControlOptions': [{ type: Input },],
-    'fitBounds': [{ type: Input },],
-    'scaleControl': [{ type: Input },],
-    'scaleControlOptions': [{ type: Input },],
-    'mapTypeControl': [{ type: Input },],
-    'mapTypeControlOptions': [{ type: Input },],
-    'panControl': [{ type: Input },],
-    'panControlOptions': [{ type: Input },],
-    'rotateControl': [{ type: Input },],
-    'rotateControlOptions': [{ type: Input },],
-    'fullscreenControl': [{ type: Input },],
-    'fullscreenControlOptions': [{ type: Input },],
-    'mapTypeId': [{ type: Input },],
-    'clickableIcons': [{ type: Input },],
-    'gestureHandling': [{ type: Input },],
-    'mapClick': [{ type: Output },],
-    'mapRightClick': [{ type: Output },],
-    'mapDblClick': [{ type: Output },],
-    'centerChange': [{ type: Output },],
-    'boundsChange': [{ type: Output },],
-    'idle': [{ type: Output },],
-    'zoomChange': [{ type: Output },],
-    'mapReady': [{ type: Output },],
-};
 //# sourceMappingURL=map.js.map

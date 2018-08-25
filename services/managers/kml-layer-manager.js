@@ -1,10 +1,10 @@
 import { Injectable, NgZone } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { GoogleMapsAPIWrapper } from './../google-maps-api-wrapper';
 /**
  * Manages all KML Layers for a Google Map instance.
  */
-var KmlLayerManager = (function () {
+var KmlLayerManager = /** @class */ (function () {
     function KmlLayerManager(_wrapper, _zone) {
         this._wrapper = _wrapper;
         this._zone = _zone;
@@ -42,21 +42,21 @@ var KmlLayerManager = (function () {
      */
     KmlLayerManager.prototype.createEventObservable = function (eventName, layer) {
         var _this = this;
-        return Observable.create(function (observer) {
+        return new Observable(function (observer) {
             _this._layers.get(layer).then(function (m) {
                 m.addListener(eventName, function (e) { return _this._zone.run(function () { return observer.next(e); }); });
             });
         });
     };
+    KmlLayerManager.decorators = [
+        { type: Injectable },
+    ];
+    /** @nocollapse */
+    KmlLayerManager.ctorParameters = function () { return [
+        { type: GoogleMapsAPIWrapper },
+        { type: NgZone }
+    ]; };
     return KmlLayerManager;
 }());
 export { KmlLayerManager };
-KmlLayerManager.decorators = [
-    { type: Injectable },
-];
-/** @nocollapse */
-KmlLayerManager.ctorParameters = function () { return [
-    { type: GoogleMapsAPIWrapper, },
-    { type: NgZone, },
-]; };
 //# sourceMappingURL=kml-layer-manager.js.map

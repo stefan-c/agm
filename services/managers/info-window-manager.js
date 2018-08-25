@@ -1,8 +1,8 @@
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Injectable, NgZone } from '@angular/core';
 import { GoogleMapsAPIWrapper } from '../google-maps-api-wrapper';
 import { MarkerManager } from './marker-manager';
-var InfoWindowManager = (function () {
+var InfoWindowManager = /** @class */ (function () {
     function InfoWindowManager(_mapsWrapper, _zone, _markerManager) {
         this._mapsWrapper = _mapsWrapper;
         this._zone = _zone;
@@ -55,6 +55,7 @@ var InfoWindowManager = (function () {
             content: infoWindow.content,
             maxWidth: infoWindow.maxWidth,
             zIndex: infoWindow.zIndex,
+            disableAutoPan: infoWindow.disableAutoPan
         };
         if (typeof infoWindow.latitude === 'number' && typeof infoWindow.longitude === 'number') {
             options.position = { lat: infoWindow.latitude, lng: infoWindow.longitude };
@@ -67,22 +68,22 @@ var InfoWindowManager = (function () {
      */
     InfoWindowManager.prototype.createEventObservable = function (eventName, infoWindow) {
         var _this = this;
-        return Observable.create(function (observer) {
+        return new Observable(function (observer) {
             _this._infoWindows.get(infoWindow).then(function (i) {
                 i.addListener(eventName, function (e) { return _this._zone.run(function () { return observer.next(e); }); });
             });
         });
     };
+    InfoWindowManager.decorators = [
+        { type: Injectable },
+    ];
+    /** @nocollapse */
+    InfoWindowManager.ctorParameters = function () { return [
+        { type: GoogleMapsAPIWrapper },
+        { type: NgZone },
+        { type: MarkerManager }
+    ]; };
     return InfoWindowManager;
 }());
 export { InfoWindowManager };
-InfoWindowManager.decorators = [
-    { type: Injectable },
-];
-/** @nocollapse */
-InfoWindowManager.ctorParameters = function () { return [
-    { type: GoogleMapsAPIWrapper, },
-    { type: NgZone, },
-    { type: MarkerManager, },
-]; };
 //# sourceMappingURL=info-window-manager.js.map

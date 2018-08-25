@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { AgmMap } from './directives/map';
 import { AgmCircle } from './directives/circle';
+import { AgmRectangle } from './directives/rectangle';
 import { AgmInfoWindow } from './directives/info-window';
 import { AgmMarker } from './directives/marker';
 import { AgmPolygon } from './directives/polygon';
@@ -17,17 +18,16 @@ import { BROWSER_GLOBALS_PROVIDERS } from './utils/browser-globals';
  */
 export function coreDirectives() {
     return [
-        AgmMap, AgmMarker, AgmInfoWindow, AgmCircle,
+        AgmMap, AgmMarker, AgmInfoWindow, AgmCircle, AgmRectangle,
         AgmPolygon, AgmPolyline, AgmPolylinePoint, AgmKmlLayer,
         AgmDataLayer
     ];
 }
-;
 /**
  * The angular-google-maps core module. Contains all Directives/Services/Pipes
  * of the core module. Please use `AgmCoreModule.forRoot()` in your app module.
  */
-var AgmCoreModule = (function () {
+var AgmCoreModule = /** @class */ (function () {
     function AgmCoreModule() {
     }
     /**
@@ -42,12 +42,10 @@ var AgmCoreModule = (function () {
             ]),
         };
     };
+    AgmCoreModule.decorators = [
+        { type: NgModule, args: [{ declarations: coreDirectives(), exports: coreDirectives() },] },
+    ];
     return AgmCoreModule;
 }());
 export { AgmCoreModule };
-AgmCoreModule.decorators = [
-    { type: NgModule, args: [{ declarations: coreDirectives(), exports: coreDirectives() },] },
-];
-/** @nocollapse */
-AgmCoreModule.ctorParameters = function () { return []; };
 //# sourceMappingURL=core.module.js.map

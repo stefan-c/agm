@@ -3,7 +3,7 @@
  * Tag.
  * It's important that the Google Maps API script gets loaded first on the page.
  */
-var NoOpMapsAPILoader = (function () {
+var NoOpMapsAPILoader = /** @class */ (function () {
     function NoOpMapsAPILoader() {
     }
     NoOpMapsAPILoader.prototype.load = function () {
@@ -12,7 +12,6 @@ var NoOpMapsAPILoader = (function () {
         }
         return Promise.resolve();
     };
-    ;
     return NoOpMapsAPILoader;
 }());
 export { NoOpMapsAPILoader };

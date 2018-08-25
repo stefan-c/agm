@@ -1,6 +1,6 @@
 import { Directive, EventEmitter, Input, Output } from '@angular/core';
 import { CircleManager } from '../services/managers/circle-manager';
-var AgmCircle = (function () {
+var AgmCircle = /** @class */ (function () {
     function AgmCircle(_manager) {
         this._manager = _manager;
         /**
@@ -169,49 +169,49 @@ var AgmCircle = (function () {
      */
     AgmCircle.prototype.getBounds = function () { return this._manager.getBounds(this); };
     AgmCircle.prototype.getCenter = function () { return this._manager.getCenter(this); };
+    AgmCircle._mapOptions = [
+        'fillColor', 'fillOpacity', 'strokeColor', 'strokeOpacity', 'strokePosition', 'strokeWeight',
+        'visible', 'zIndex', 'clickable'
+    ];
+    AgmCircle.decorators = [
+        { type: Directive, args: [{
+                    selector: 'agm-circle'
+                },] },
+    ];
+    /** @nocollapse */
+    AgmCircle.ctorParameters = function () { return [
+        { type: CircleManager }
+    ]; };
+    AgmCircle.propDecorators = {
+        latitude: [{ type: Input }],
+        longitude: [{ type: Input }],
+        clickable: [{ type: Input }],
+        draggable: [{ type: Input, args: ['circleDraggable',] }],
+        editable: [{ type: Input }],
+        fillColor: [{ type: Input }],
+        fillOpacity: [{ type: Input }],
+        radius: [{ type: Input }],
+        strokeColor: [{ type: Input }],
+        strokeOpacity: [{ type: Input }],
+        strokePosition: [{ type: Input }],
+        strokeWeight: [{ type: Input }],
+        visible: [{ type: Input }],
+        zIndex: [{ type: Input }],
+        centerChange: [{ type: Output }],
+        circleClick: [{ type: Output }],
+        circleDblClick: [{ type: Output }],
+        drag: [{ type: Output }],
+        dragEnd: [{ type: Output }],
+        dragStart: [{ type: Output }],
+        mouseDown: [{ type: Output }],
+        mouseMove: [{ type: Output }],
+        mouseOut: [{ type: Output }],
+        mouseOver: [{ type: Output }],
+        mouseUp: [{ type: Output }],
+        radiusChange: [{ type: Output }],
+        rightClick: [{ type: Output }]
+    };
     return AgmCircle;
 }());
 export { AgmCircle };
-AgmCircle._mapOptions = [
-    'fillColor', 'fillOpacity', 'strokeColor', 'strokeOpacity', 'strokePosition', 'strokeWeight',
-    'visible', 'zIndex'
-];
-AgmCircle.decorators = [
-    { type: Directive, args: [{
-                selector: 'agm-circle'
-            },] },
-];
-/** @nocollapse */
-AgmCircle.ctorParameters = function () { return [
-    { type: CircleManager, },
-]; };
-AgmCircle.propDecorators = {
-    'latitude': [{ type: Input },],
-    'longitude': [{ type: Input },],
-    'clickable': [{ type: Input },],
-    'draggable': [{ type: Input, args: ['circleDraggable',] },],
-    'editable': [{ type: Input },],
-    'fillColor': [{ type: Input },],
-    'fillOpacity': [{ type: Input },],
-    'radius': [{ type: Input },],
-    'strokeColor': [{ type: Input },],
-    'strokeOpacity': [{ type: Input },],
-    'strokePosition': [{ type: Input },],
-    'strokeWeight': [{ type: Input },],
-    'visible': [{ type: Input },],
-    'zIndex': [{ type: Input },],
-    'centerChange': [{ type: Output },],
-    'circleClick': [{ type: Output },],
-    'circleDblClick': [{ type: Output },],
-    'drag': [{ type: Output },],
-    'dragEnd': [{ type: Output },],
-    'dragStart': [{ type: Output },],
-    'mouseDown': [{ type: Output },],
-    'mouseMove': [{ type: Output },],
-    'mouseOut': [{ type: Output },],
-    'mouseOver': [{ type: Output },],
-    'mouseUp': [{ type: Output },],
-    'radiusChange': [{ type: Output },],
-    'rightClick': [{ type: Output },],
-};
 //# sourceMappingURL=circle.js.map

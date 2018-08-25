@@ -3,10 +3,12 @@ export interface GoogleMap extends MVCObject {
     data?: Data;
     constructor(el: HTMLElement, opts?: MapOptions): void;
     panTo(latLng: LatLng | LatLngLiteral): void;
+    panBy(x: number, y: number): void;
     setZoom(zoom: number): void;
     getCenter(): LatLng;
     setCenter(latLng: LatLng | LatLngLiteral): void;
     getBounds(): LatLngBounds;
+    getMapTypeId(): MapTypeId;
     getZoom(): number;
     setOptions(options: MapOptions): void;
     panToBounds(latLngBounds: LatLngBounds | LatLngBoundsLiteral): void;
@@ -28,7 +30,9 @@ export interface Marker extends MVCObject {
     setOpacity(opacity: number): void;
     setVisible(visible: boolean): void;
     setZIndex(zIndex: number): void;
+    setAnimation(animation: any): void;
     getLabel(): MarkerLabel;
+    setClickable(clickable: boolean): void;
 }
 export interface MarkerOptions {
     position: LatLng | LatLngLiteral;
@@ -40,6 +44,8 @@ export interface MarkerOptions {
     opacity?: number;
     visible?: boolean;
     zIndex?: number;
+    clickable: boolean;
+    animation?: any;
 }
 export interface MarkerLabel {
     color: string;
@@ -73,6 +79,34 @@ export interface CircleOptions {
     fillOpacity?: number;
     map?: GoogleMap;
     radius?: number;
+    strokeColor?: string;
+    strokeOpacity?: number;
+    strokePosition?: 'CENTER' | 'INSIDE' | 'OUTSIDE';
+    strokeWeight?: number;
+    visible?: boolean;
+    zIndex?: number;
+}
+export interface Rectangle extends MVCObject {
+    getBounds(): LatLngBounds;
+    getDraggable(): boolean;
+    getEditable(): boolean;
+    getMap(): GoogleMap;
+    getVisible(): boolean;
+    setBounds(bounds: LatLngBounds | LatLngBoundsLiteral): void;
+    setDraggable(draggable: boolean): void;
+    setEditable(editable: boolean): void;
+    setMap(map: GoogleMap): void;
+    setOptions(options: RectangleOptions): void;
+    setVisible(visible: boolean): void;
+}
+export interface RectangleOptions {
+    bounds?: LatLngBounds | LatLngBoundsLiteral;
+    clickable?: boolean;
+    draggable?: boolean;
+    editable?: boolean;
+    fillColor?: string;
+    fillOpacity?: number;
+    map?: GoogleMap;
     strokeColor?: string;
     strokeOpacity?: number;
     strokePosition?: 'CENTER' | 'INSIDE' | 'OUTSIDE';
@@ -170,12 +204,11 @@ export interface InfoWindow extends MVCObject {
     setPosition(position: LatLng | LatLngLiteral): void;
     setZIndex(zIndex: number): void;
 }
-export interface MVCObject {
-    addListener(eventName: string, handler: Function): MapsEventListener;
-}
 export interface MVCArray<T> extends MVCObject {
+    constructor(array?: T[]): void;
     clear(): void;
-    getArray(): Array<T>;
+    forEach(callback: (elem: T, i: number) => void): void;
+    getArray(): T[];
     getAt(i: number): T;
     getLength(): number;
     insertAt(i: number, elem: T): void;
@@ -183,7 +216,9 @@ export interface MVCArray<T> extends MVCObject {
     push(elem: T): number;
     removeAt(i: number): T;
     setAt(i: number, elem: T): void;
-    forEach(callback: (elem: T, i: number) => void): void;
+}
+export interface MVCObject {
+    addListener(eventName: string, handler: Function): MapsEventListener;
 }
 export interface MapsEventListener {
     remove(): void;
@@ -232,7 +267,7 @@ export interface PolylineOptions {
     draggable?: boolean;
     editable?: boolean;
     geodesic?: boolean;
-    icon?: Array<IconSequence>;
+    icons?: Array<IconSequence>;
     map?: GoogleMap;
     path?: Array<LatLng> | Array<LatLng | LatLngLiteral>;
     strokeColor?: string;
@@ -356,6 +391,7 @@ export interface Data extends MVCObject {
     setMap(map: GoogleMap): void;
     setStyle(style: () => void): void;
     forEach(callback: (feature: Feature) => void): void;
+    loadGeoJson(url: string, options?: GeoJsonOptions, callback?: (feats: Feature[]) => void): void;
 }
 export interface Feature extends MVCObject {
     id?: number | string | undefined;
@@ -385,18 +421,18 @@ export interface Geometry {
  * are added first are positioned closer to the edge of the map.
  */
 export declare enum ControlPosition {
-    BOTTOM_CENTER = 0,
-    BOTTOM_LEFT = 1,
-    BOTTOM_RIGHT = 2,
-    LEFT_BOTTOM = 3,
+    RIGHT_BOTTOM = 0,
+    TOP_LEFT = 1,
+    TOP_CENTER = 2,
+    TOP_RIGHT = 3,
     LEFT_CENTER = 4,
     LEFT_TOP = 5,
-    RIGHT_BOTTOM = 6,
-    RIGHT_CENTER = 7,
-    RIGHT_TOP = 8,
-    TOP_CENTER = 9,
-    TOP_LEFT = 10,
-    TOP_RIGHT = 11,
+    LEFT_BOTTOM = 6,
+    RIGHT_TOP = 7,
+    RIGHT_CENTER = 8,
+    BOTTOM_RIGHT = 9,
+    BOTTOM_LEFT = 10,
+    BOTTOM_CENTER = 11,
 }
 export declare enum MapTypeId {
     /** This map type displays a transparent layer of major streets on satellite images. */
